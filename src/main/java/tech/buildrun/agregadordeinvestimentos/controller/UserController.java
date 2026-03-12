@@ -1,7 +1,10 @@
 package tech.buildrun.agregadordeinvestimentos.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.buildrun.agregadordeinvestimentos.controller.dto.*;
+import tech.buildrun.agregadordeinvestimentos.entity.Account;
 import tech.buildrun.agregadordeinvestimentos.entity.User;
 import tech.buildrun.agregadordeinvestimentos.service.UserService;
 
@@ -23,6 +26,10 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) {
         var userId = userService.createUser(createUserDto);
 
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
         return ResponseEntity.created(URI.create("/v1/users/" + userId.toString())).build();
     }
 
@@ -39,10 +46,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> listUsers() {
+    public ResponseEntity<List<UserResponseDto>> listUsers() {
         var users = userService.listUsers();
 
-        return ResponseEntity.ok(users);
+        var response = users.stream()
+                .map(user -> new UserResponseDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getAccounts()))
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{userId}")
@@ -59,6 +70,21 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("{userId}/accounts")
+    public ResponseEntity<Void> createAccount(@PathVariable("userId") String userId, @RequestBody CreateAccountDto createAccountDto) {
+
+        userService.createAccount(userId, createAccountDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/accounts")
+    public ResponseEntity<List<AccountResponseDto>> listAccounts(@PathVariable String userId) {
+
+        var accounts = userService.listAccounts(userId);
+
+        return  ResponseEntity.ok(accounts);
+    }
 
 
 }

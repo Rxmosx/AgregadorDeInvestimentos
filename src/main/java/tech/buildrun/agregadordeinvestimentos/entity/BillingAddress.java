@@ -22,15 +22,21 @@ public class BillingAddress {
     private String street;
 
     @Column(name = "number")
-    private Integer number;
+    private String number;
 
-    public BillingAddress(UUID id, String street, Integer number) {
+    @Column(name = " bairro")
+    private String bairro;
+
+    public BillingAddress(UUID id, Account account, String street, String number,  String bairro) {
         this.id = id;
+        this.account = account;
         this.street = street;
         this.number = number;
+        this.bairro = bairro;
     }
 
     public BillingAddress() {}
+
 
     public UUID getId() {
         return id;
@@ -48,11 +54,11 @@ public class BillingAddress {
         this.street = street;
     }
 
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 }
