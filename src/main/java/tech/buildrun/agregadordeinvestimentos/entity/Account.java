@@ -1,7 +1,12 @@
 package tech.buildrun.agregadordeinvestimentos.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,11 +20,12 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID accountId;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private BillingAddress billingAddress;
 
@@ -31,12 +37,16 @@ public class Account {
 
 
 
-    public Account(UUID accountId, String description) {
+    public Account(UUID accountId, String description, User user, BillingAddress billingAddress,  List<AccountStock> accountStocks) {
         this.accountId = accountId;
         this.description = description;
+        this.user = user;
+        this.billingAddress = billingAddress;
+        this.accountStocks = accountStocks;
     }
 
     public Account() {}
+
 
     public UUID getAccountId() {
         return accountId;
@@ -60,5 +70,21 @@ public class Account {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public List<AccountStock> getAccountStocks() {
+        return accountStocks;
+    }
+
+    public void setAccountStocks(List<AccountStock> accountStocks) {
+        this.accountStocks = accountStocks;
     }
 }

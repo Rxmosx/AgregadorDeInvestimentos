@@ -3,14 +3,9 @@ package tech.buildrun.agregadordeinvestimentos.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import tech.buildrun.agregadordeinvestimentos.entity.Account;
-import tech.buildrun.agregadordeinvestimentos.entity.User;
 
-import java.util.List;
 import java.util.UUID;
 
-
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
-
-    boolean existsByEmail(String email);
+public interface AccountRepository extends JpaRepository<Account, UUID> {
 }

@@ -1,5 +1,6 @@
 package tech.buildrun.agregadordeinvestimentos.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -31,10 +32,11 @@ public class User {
     @UpdateTimestamp
     private Instant updateTimestamp;
 
+    @JsonManagedReference
     @OneToMany(mappedBy= "user")
     private List<Account> accounts;
 
-    public User(UUID userId,  String username, String email, String password, Instant creationTimestamp, Instant updateTimestamp) {
+    public User(UUID userId, String username, String email, String password, Instant creationTimestamp, Instant updateTimestamp) {
         this.userId = userId;
         this.username = username;
         this.email = email;
